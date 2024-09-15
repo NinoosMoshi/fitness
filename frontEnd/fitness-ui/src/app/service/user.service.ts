@@ -45,6 +45,11 @@ export class UserService {
     return this.http.get<any>(`${this.BASE_URL}/goal/status/${id}`);
   }
 
+  // http://localhost:8080/api/stats
+  getStats():Observable<any>{
+    return this.http.get<any>(`${this.BASE_URL}/stats`);
+  }
+
 
 
 }
