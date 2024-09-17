@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../service/user.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { SharedModule } from '../../shared/shared.module';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  imports: [SharedModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
