@@ -13,19 +13,35 @@ import { SharedModule } from '../../shared/shared.module';
 export class DashboardComponent implements OnInit{
 
   statsData:any;
+  workouts:any;
+  activities:any;
 
 
   constructor(private userService:UserService){}
 
   ngOnInit(): void {
     this.getStats();
+    this.getGraphStats();
   }
 
   getStats(){
     this.userService.getStats().subscribe({
       next:res =>{
-        console.log(res)
         this.statsData = res
+      },
+      error:err =>{
+        console.log(err.message)
+      }
+    })
+  }
+
+
+  getGraphStats(){
+    this.userService.getGraphStats().subscribe({
+      next:res => {
+        this.workouts = res.workouts;
+        this.activities = res.activities;
+        console.log(this.workouts, this.activities)
       },
       error:err =>{
         console.log(err.message)

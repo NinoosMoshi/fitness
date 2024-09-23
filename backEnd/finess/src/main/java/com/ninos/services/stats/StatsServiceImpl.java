@@ -1,11 +1,23 @@
 package com.ninos.services.stats;
 
+import com.ninos.dto.ActivityDTO;
+import com.ninos.dto.GraphDTO;
 import com.ninos.dto.StatsDTO;
+import com.ninos.dto.WorkoutDTO;
+import com.ninos.entity.Activity;
+import com.ninos.entity.Workout;
+import com.ninos.mapper.ActivityMapper;
+import com.ninos.mapper.WorkoutMapper;
 import com.ninos.repository.ActivityRepository;
 import com.ninos.repository.GoalRepository;
 import com.ninos.repository.WorkoutRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -14,6 +26,8 @@ public class StatsServiceImpl implements StatsService{
     private final GoalRepository goalRepository;
     private final ActivityRepository activityRepository;
     private final WorkoutRepository workoutRepository;
+    private final WorkoutMapper workoutMapper;
+    private final ActivityMapper activityMapper;
 
 
     @Override
@@ -43,4 +57,22 @@ public class StatsServiceImpl implements StatsService{
 
         return dto;
     }
+
+    @Override
+    public GraphDTO getGraphStatus() {
+        Pageable pageable = PageRequest.of(0,7);
+
+        List<Workout> workouts = workoutRepository.findLast7Workouts(pageable);
+        List<Activity> activities = activityRepository.findLast7Activities(pageable);
+
+        GraphDTO graphDTO = new GraphDTO();
+        List<WorkoutDTO> workoutDTOS = workouts.stream().map(workoutMapper::workoutEntityToDto).collect(Collectors.toList());
+        List<ActivityDTO> activityDTOS = activities.stream().map(activityMapper::activityEntityToDto).collect(Collectors.toList());
+        graphDTO.setWorkouts(workoutDTOS);
+        graphDTO.setActivities(activityDTOS);
+
+        return graphDTO;
+    }
+
+
 }
